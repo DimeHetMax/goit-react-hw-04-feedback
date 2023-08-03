@@ -12,7 +12,6 @@ export const App = () => {
   const array = ["good", "neutral", "bad"]
 
 const handelOnClick =(event)=>{
-  console.log(event)
   if(event.target.value === "good"){
     setGood(good + 1)
     setTotal(total +1)
