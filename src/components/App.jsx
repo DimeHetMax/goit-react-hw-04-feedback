@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {FeedbackOptions} from "components/FeedbackOptions/FeedbackOptions";
 import {Statistics} from "components/Statistics/Statistics"
 import {Notification} from "components/Notification/Notification"
@@ -9,29 +9,36 @@ export const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
   const [total, setTotal] = useState(0)
+  const [positive, setPositive] = useState(0)
   const array = ["good", "neutral", "bad"]
 
 const handelOnClick =(event)=>{
   if(event.target.value === "good"){
-    setGood(good + 1)
-    setTotal(total +1)
+    setGood(prevState => prevState + 1)
+    setTotal(prevState => prevState + 1)
   }
   if(event.target.value === "neutral"){
-    setNeutral(neutral + 1)
-    setTotal(total +1)
+    setNeutral(prevState => prevState + 1)
+    setTotal(prevState => prevState + 1)
   }
   if(event.target.value === "bad"){
-    setBad(bad +1)
-    setTotal(total +1)
+    setBad(prevState => prevState + 1)
+    setTotal(prevState => prevState + 1)
   }
 }
-const countPositiveFeedbackPercentage=(good, total)=>{
-      if (total === 0) {
-        return 0;
-      }
-      const positivePercentage = (good / total) * 100;
-      return positivePercentage.toFixed(0);   
-}
+// const countPositiveFeedbackPercentage=(good, total)=>{
+//       if (total === 0) {
+//         return 0;
+//       }
+//       const positivePercentage = (good / total) * 100;
+//       return positivePercentage.toFixed(0);   
+// }
+useEffect(()=>{
+  if(total !== 0){
+    const positivePercentage = (good / total) * 100;
+    setPositive(positivePercentage.toFixed(0))
+  }
+},[total])
   return(
     <div>
     <Section title="Pleace leave feedback">
@@ -41,9 +48,10 @@ const countPositiveFeedbackPercentage=(good, total)=>{
       {total === 0 ? (
          <Notification message="There is no feedback"/>
       ):(
-        <Statistics good={good} neutral={neutral} bad={bad} total={total} positivePercentage={countPositiveFeedbackPercentage}/>
+        <Statistics good={good} neutral={neutral} bad={bad} total={total} positivePercentage={positive} />
       )}
      </Section>
   </div>
   )
 }
+// positivePercentage={countPositiveFeedbackPercentage}
